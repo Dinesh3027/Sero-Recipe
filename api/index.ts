@@ -1,6 +1,7 @@
 import { json, urlencoded } from "body-parser";
 import cors from "cors";
 import express, { Request, Response } from "express";
+import Recipes  from "./routes/recipes";
 
 const app = express();
 
@@ -21,18 +22,7 @@ export class Application {
   }
 
   setupControllers() {
-    app.get("/recipes", (req: Request, res: Response) => {
-      res.status(200).send("");
-    });
-    app.get("/recipes/:id", (req: Request, res: Response) => {
-      res.status(200).send("");
-    });
-    app.post("/recipes", (req: Request, res: Response) => {
-      res.status(200).send("");
-    });
-    app.delete("/recipes/:id", (req: Request, res: Response) => {
-      res.status(200).send("");
-    });
+    app.use("/api", Recipes);
     app;
   }
 }
