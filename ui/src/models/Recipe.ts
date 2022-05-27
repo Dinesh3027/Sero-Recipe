@@ -17,4 +17,11 @@ export class Recipe {
         this.measurements = measurements;
         this.cook_method = cook_method;
     }
+
+    isEmpty(): boolean{
+        return this.name === "" && 
+        this.ingredients === "" && 
+        this.measurements === "" && 
+        this.cook_method === "";
+    }
 }

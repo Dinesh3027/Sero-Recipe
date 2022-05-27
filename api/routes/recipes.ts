@@ -14,25 +14,16 @@ router.use(bodyParser.json()).use(
 
 const DB_PATH = './database/cookbook.json';
 
-const parseRecipe = (it: any): Recipe | null => {
-    if( it != null){
-        let recipe = new Recipe();
-        recipe.id = it.id;
-        recipe.name = it.name;
-        recipe.ingredients = it.ingredients;
-        recipe.measurements = it.measurements;
-        recipe.cook_method = it.cook_method;
-        return recipe;
-    } else { return null; }
+const parseRecipe = (it: any): Recipe => {
+    let recipe = new Recipe().deserialize(it);
+    return recipe;
 }
 
 const formatFileData = (data: any): Array<Recipe> => {
     var recipeJournal: Array<Recipe> = [];
     data.forEach((it: any) => {
-        let recipe = parseRecipe(it);
-        if(recipe != null){ recipeJournal.push(recipe); }
+        recipeJournal.push(parseRecipe(it));
     });
-
     return recipeJournal;
 }
 
@@ -86,7 +77,7 @@ router.get("/recipes", (req: Request, res: Response) => {
 });
 
 /**
-* Get All Recipes
+* Search by id
 **/
 router.get("/recipes/:id", (req: Request, res: Response) => {
     let id = parseInt(req.params.id);
@@ -94,7 +85,7 @@ router.get("/recipes/:id", (req: Request, res: Response) => {
         if (response.status === 0) {
             let receipes: Array<Recipe> = formatFileData(response.data);
             var recipe = receipes.find(it => it.id === id);
-            if (!isNaN(recipe.id)) {
+            if (recipe !== undefined) {
                 res.status(200).send({
                     status: 0,
                     data: recipe,
@@ -113,16 +104,55 @@ router.get("/recipes/:id", (req: Request, res: Response) => {
     });
 });
 
-router.post("/recipe/", (req: Request, res: Response) => {
-    const recipe = parseRecipe(req.body);
-    console.log("req.body", req.body);
-    console.log("recipe", recipe);
+/**
+* Search by Name or Ingredient
+**/
+router.get("/recipe/:type/:name", (req: Request, res: Response) => {
+    console.log("Params", req.params);
+    let searchWord = req.params.name;
+    let type = parseInt(req.params.type);
     readFile(true, function (response: any) {
         if (response.status === 0) {
             let receipes: Array<Recipe> = formatFileData(response.data);
+            var recipe = receipes.filter(it => (type === 1 ? it.ingredients.indexOf(searchWord) > -1  : it.name.indexOf(searchWord) > -1));
+            console.log("filtered Recipe", recipe);
+            if (recipe.length > 0) {
+                res.status(200).send({
+                    status: 0,
+                    data: recipe,
+                    errors: null
+                });
+            } else {
+                res.status(200).send({
+                    status: 1,
+                    data: null,
+                    errors: "Unable to find the Recipe or It might not exist!"
+                });
+            }
+        } else {
+            res.status(400).send(response);
+        }
+    });
+});
+
+router.post("/recipe/", (req: Request, res: Response) => {
+    const recipe = parseRecipe(req.body);
+    console.log("req.body", req.body);
+    // console.log("recipe", recipe);
+    readFile(true, function (response: any) {
+        if (response.status === 0) {
+            console.log("=============================");
+            console.log("Receipes before push", response.data);
+            console.log("=============================");
+            let receipes: Array<Recipe> = formatFileData(response.data);
+            console.log("Receipes Length", receipes.length);
             let filteredRecipe = receipes.find(it => it.id === recipe.id);
+            console.log("Receipes Length", receipes.length);
             if (filteredRecipe === undefined) {
                 receipes.push(recipe);
+                console.log("=============================");
+                console.log("Receipes after push", receipes);
+                console.log("=============================");
                 writeFile(JSON.stringify(receipes, null, 2), (writeStatus: any) => {
                     const msg = writeStatus.status === 0 ?
                         'Successfully added the Recipe.' :

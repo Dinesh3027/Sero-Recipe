@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
-import '../../global.css';
 
+import { Link } from 'react-router-dom';
+import { AppConstants } from 'src/utils/AppConstants';
+import '../../global.css';
 
 export const Home = () => {
   return (
@@ -20,7 +21,7 @@ export const Home = () => {
               <div className='card-body'>
                 <h3>Take a Note</h3>
                 <p className="lead">Add your Recipe and save it for future reference.</p>
-                <Link className='btn btn-outline-primary' to="/save">Add Recipe</Link>
+                <Link className='btn btn-outline-primary' to={AppConstants.ADD}>Add Recipe</Link>
               </div>
             </div>
           </div>
@@ -29,21 +30,10 @@ export const Home = () => {
               <div className='card-body'>
                 <h3>Find Recipe</h3>
                 <p className="lead">Search your favorite saved Recipe.</p>
-                <Link className='btn btn-outline-success' to="/search">Search Recipe</Link>
+                <Link className='btn btn-outline-success' to={AppConstants.SEARCH}>Search Recipe</Link>
               </div>
             </div>
           </div>
-          <div className='col-sm-4'>
-            <div className='card'>
-              <div className='card-body'>
-                <h3>View Book</h3>
-                <p className="lead">List out the recipes from your Cook Book</p>
-                <Link className='btn btn-outline-warning' to="/search">Recipe Book</Link>
-              </div>
-            </div>
-          </div>
-
-
         </div>
       </div>
     </>

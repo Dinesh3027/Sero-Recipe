@@ -16,7 +16,9 @@
     "react-icons": "^4.2.0",
     "react-router-dom": "5.2.0",
     "react-scripts": "^5.0.1",
+    "react-toastify": "^9.0.1",
     "swr": "^0.5.5",
+    "ts-node": "^10.8.0",
     "typescript": "3.8",
     "web-vitals": "^1.0.1"
   },

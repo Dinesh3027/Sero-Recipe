@@ -1,14 +1,12 @@
 import { useState } from "react";
-import { Recipe } from "../types/recipe";
-// import { Recipe } from "../models/Recipe";
 
 // useForm functional component
-export const useSaveForm = (callback: any, initialState: Recipe) => {
-    const [values, setValues] = useState(initialState);
+export const useSearchForm = (callback: any, searchWord: String) => {
+    const [values, setValues] = useState(searchWord);
 
     // onChange handle change events whenever 
     // something changes in the input field
-    const onChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+    const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValues({ ...values, [event.target.name]: event.target.value });
     };
 
@@ -22,7 +20,6 @@ export const useSaveForm = (callback: any, initialState: Recipe) => {
     return {
         onChange,
         onSubmit,
-        setValues,
         values,
     };
 }

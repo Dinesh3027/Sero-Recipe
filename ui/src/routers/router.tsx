@@ -1,8 +1,8 @@
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
-import { Edit } from "../pages/Edit/Edit";
 import { Home } from "../pages/Home/Home";
 import { Save } from "../pages/Save/Save";
 import { Search } from "../pages/Search/Search";
+import { Edit } from "../pages/Edit/Edit";
 
 export const RecipeRoute = () => {
     return (
