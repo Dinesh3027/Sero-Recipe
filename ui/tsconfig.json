@@ -36,6 +36,8 @@
     "**/*.ts",
     "**/*.tsx"
   ],
-  "exclude": ["./node_modules"],
+  "exclude": [
+    "./node_modules"
+  ],
   "extends": "./base-tsconfig.json"
 }

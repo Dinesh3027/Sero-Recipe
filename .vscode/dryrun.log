@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/dineshmerugumilli/Sites/Sero-Recipe'
+npm install
+make: Leaving directory `/Users/dineshmerugumilli/Sites/Sero-Recipe'
+ 
