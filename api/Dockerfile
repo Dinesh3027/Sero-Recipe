@@ -1,6 +1,6 @@
 FROM node:14
 
-WORKDIR /usr/src/app/api
+WORKDIR /api
 
 COPY . .
 

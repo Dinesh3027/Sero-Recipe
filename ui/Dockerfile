@@ -1,8 +1,8 @@
 FROM node:14
 
-WORKDIR /usr/src/app/ui
+WORKDIR /ui
 
-COPY package*.json ./
+COPY ["package*.json", "./"]
 
 RUN npm i
 
