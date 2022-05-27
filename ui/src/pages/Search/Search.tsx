@@ -7,6 +7,7 @@ import { useSearchForm } from '../../hooks/useSearchForm';
 
 export const Search = () => {
 
+    //Hooks to Search Recipes
     const { onChange, onSubmit, values } = useSearchForm(formCallback, '');
     const [recipes, setRecipes] = useState<Array<Recipe>>([]);
     const [type, setType] = useState("0");
@@ -24,6 +25,10 @@ export const Search = () => {
         setType(event.target.value);
     };
 
+    /**
+     * Fetch the recipe from the API
+     * @param { any } searchWord word to search
+     */
     const searchRecipe = async (searchWord: any) => {
         const response = await fetch('http://localhost:3080/api/recipe/'+type+'/' + searchWord)
         const searchResult = await response.json();
@@ -36,9 +41,13 @@ export const Search = () => {
         }
     }
 
-    const formatDate = (timeStr: number) => {
+    /**
+     * Formate time in milliseconds to UTC Date String
+     * @param { number } time time value in milliseconds 
+     */
+    const formatDate = (time: number) => {
         let dt = new Date();
-        dt.setTime(timeStr);
+        dt.setTime(time);
         return dt.toUTCString();
     }
 

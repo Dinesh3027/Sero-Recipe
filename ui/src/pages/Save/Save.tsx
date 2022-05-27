@@ -4,25 +4,30 @@ import { useSaveForm } from '../../hooks/useSaveForm';
 import { Recipe } from '../../models/Recipe';
 import { useState } from 'react';
 
+const initialState = new Recipe(new Date().getTime(), "", "", "", "");
+
 export const Save = () => {
     const [notify, setNotify] = useState('');
     // defining the initial state for the form
-    const initialState = new Recipe(new Date().getTime(), "", "", "", "");
     const { onChange, onSubmit, setValues, values } = useSaveForm(formCallback, initialState);
 
-    // a submit function that will execute upon form submission
+    /**
+     * Submit function that will execute upon form submission
+     *  */
     async function formCallback() {
         // send "values" to database
-        // console.log("formCallback", values);
         let recipe: Recipe = new Recipe(values.id, values.name, values.ingredients, values.measurements, values.cook_method);
         if (!recipe.isEmpty()) {
-            console.log("Pushing recipe", recipe);
             postRecipeData(recipe);
-        } else {
-            console.log("Not pushed!", recipe);
+        } else {          
+            showNotification('Please enter required fields to save your recipes.');
         }
     }
 
+    /**
+     * Save Recipe with the API
+     * @param recipe Recipe Object to save into Recipes Database
+     */
     const postRecipeData = async (recipe: Recipe) => {
         const request = {
             method: 'POST',
@@ -35,14 +40,23 @@ export const Save = () => {
         const data = await response.json();
         if (data.status === 0) {
             console.log("Recipe", "Saved", data);
-            setNotify('You succesfully added a Recipe.');
-            setTimeout(() => {
-                setNotify('');
-                setValues(initialState);                
-            }, 1000);
+            setValues(initialState); 
+            showNotification('You succesfully added a Recipe.');
         } else {
             console.log("Recipe", "Not Saved", data);
+            showNotification('Something went wrong, please try again later.');
         }
+    }
+
+    /**
+     * Show Notification to the user
+     * @param message Message to show as Notification
+     */
+    const showNotification = (message: string) =>{
+        setNotify(message);
+        setTimeout(() => {
+            setNotify('');               
+        }, 1500);
     }
 
     return (
@@ -70,13 +84,13 @@ export const Save = () => {
                                 <div className='save-flex-start'>
                                     <div className='form-block'>
                                         <label className='form-label'>Name:</label>
-                                        <input type="text" className='form-input recipe-name' name="name" onChange={onChange} required />
+                                        <input type="text" className='form-input recipe-name' name="name" onChange={onChange} value={values.name} required />
                                     </div>
                                 </div>
                                 <div className='save-flex-start'>
                                     <div className='form-block'>
                                         <label>Ingredients:</label>
-                                        <textarea className='form-input form-textarea recipe-ingre' name="ingredients" onChange={onChange} required />
+                                        <textarea className='form-input form-textarea recipe-ingre' name="ingredients" onChange={onChange} value={values.ingredients} required />
                                     </div>
                                 </div>
                             </div>
@@ -84,13 +98,13 @@ export const Save = () => {
                                 <div className='save-flex-start'>
                                     <div className='form-block'>
                                         <label>Measurements:</label>
-                                        <input className='form-input recipe-measure' name="measurements" onChange={onChange} required />
+                                        <input className='form-input recipe-measure' name="measurements" onChange={onChange}  value={values.measurements} required />
                                     </div>
                                 </div>
                                 <div className='save-flex-start'>
                                     <div className='form-block'>
                                         <label>Cooking Method:</label>
-                                        <textarea className='form-input form-textarea recipe-cooking' name="cook_method" onChange={onChange} required />
+                                        <textarea className='form-input form-textarea recipe-cooking' name="cook_method" onChange={onChange} value={values.cook_method} required />
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +114,6 @@ export const Save = () => {
                     <button type="submit"  data-testid='save-btn' className='save-btn' value="Submit">Save</button>
                 </form>
             </div>
-            {/* <ToastContainer /> */}
         </>
     );
 };

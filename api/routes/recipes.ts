@@ -11,14 +11,16 @@ router.use(bodyParser.json()).use(
     })
 );
 
-
+// Database path
 const DB_PATH = './database/cookbook.json';
 
+// parse Recipe Object
 const parseRecipe = (it: any): Recipe => {
     let recipe = new Recipe().deserialize(it);
     return recipe;
 }
 
+// Parsing the File data as an array of Recipes
 const formatFileData = (data: any): Array<Recipe> => {
     var recipeJournal: Array<Recipe> = [];
     data.forEach((it: any) => {
@@ -27,6 +29,7 @@ const formatFileData = (data: any): Array<Recipe> => {
     return recipeJournal;
 }
 
+// Reading from the file
 const readFile = (returnJson: boolean, callback: Function) => {
     fs.readFile(DB_PATH, 'utf8', (err: any, data: any) => {
         if (err) {
@@ -45,6 +48,7 @@ const readFile = (returnJson: boolean, callback: Function) => {
     });
 };
 
+//Writing the data
 const writeFile = (fileData: any, callback: Function) => {
     fs.writeFile(DB_PATH, fileData, 'utf8', (err: any) => {
         if (err) {
@@ -135,6 +139,9 @@ router.get("/recipe/:type/:name", (req: Request, res: Response) => {
     });
 });
 
+/**
+* Add a new Recipe
+**/
 router.post("/recipe/", (req: Request, res: Response) => {
     const recipe = parseRecipe(req.body);
     console.log("req.body", req.body);
@@ -176,6 +183,9 @@ router.post("/recipe/", (req: Request, res: Response) => {
     });
 });
 
+/**
+* Delete a Recipe
+**/
 router.delete("/recipe/:id", (req: Request, res: Response) => {
     let id = parseInt(req.params.id);
     readFile(true, function (response: any) {
